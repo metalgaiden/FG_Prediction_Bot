@@ -55,11 +55,10 @@ class gameState:
                     self.P2_Health -= 1
                 else:
                     self.P1_Health -= 1
+        if player == 'P1':
+            self.P1_Action = 'kick(active)'
         else:
-            if player == 'P1':
-                self.P1_Action = 'kick(active)'
-            else:
-                self.P2_Action = 'kick(active)'
+            self.P2_Action = 'kick(active)'
 
     def sblock(self, p2, player):
         if player == 'P1':
@@ -74,7 +73,7 @@ class gameState:
             self.P2_Action = 'crouch block'
 
     def parry_high(self, p2, player):
-        if p2 == 'p' and P_Distance < 2:
+        if p2 == 'p' and self.P_Distance < 2:
             if player == 'P1':
                 self.P2_Health -= 1
             else:
@@ -85,7 +84,7 @@ class gameState:
             self.P2_Action = 'parry high'
         
     def parry_mid(self, p2, player):
-        if p2 == 'k2':
+        if p2 == 'k2' and self.P_Distance < 4:
             if player == 'P1':
                 self.P2_Health -= 1
             else:
@@ -96,7 +95,7 @@ class gameState:
             self.P2_Action = 'parry mid'
 
     def parry_low(self, p2, player):
-        if p2 == 's1':
+        if p2 == 's1' and self.P_Distance < 3:
             if player == 'P1':
                 self.P2_Health -= 1
             else:
