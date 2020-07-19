@@ -1,3 +1,4 @@
+import pygame
 class gameState:
     P_Distance = 3
     P1_Action = None
@@ -171,5 +172,19 @@ def game(state):
     
 
 if __name__ == "__main__":
+    pygame.init()
+
+    display_width = 800
+    display_height = 600
+
+    gameDisplay = pygame.display.set_mode((display_width,display_height))
+    pygame.display.set_caption('A bit Racey')
+
+    black = (0,0,0)
+    white = (255,255,255)
+
+    clock = pygame.time.Clock()
+    crashed = False
+    carImg = pygame.image.load('bruh.jpg')
     x = gameState()
     game(x)
