@@ -4,24 +4,19 @@ class gameState:
     P2_Action = None
     P1_Health = 1
     P2_Health = 1
+    new_distance = P_Distance
 
     def punch(self, p2, player):
         if self.P_Distance < 2 or (self.P_Distance == 2 and p2 == 'f'):
-            if p2 == 'sb' or p2 == 'cb' or (self.P_Distance == 1 and p2 == 'b') or p2 == 's':
-                if player == 'P1':
-                    self.P1_Action = 'punch(active)'
-                else:
-                    self.P2_Action = 'punch(active)'
-            else:
+            if p2 != 'sb' and p2 != 'cb' and p2 != 'ph' and p2 != 's' and not (self.P_Distance == 1 and p2 == 'b'):
                 if player == 'P1':
                     self.P2_Health -= 1
                 else:
                     self.P1_Health -= 1
+        if player == 'P1':
+            self.P1_Action = 'punch(active)'
         else:
-            if player == 'P1':
-                self.P1_Action = 'punch(active)'
-            else:
-                self.P2_Action = 'punch(active)'
+            self.P2_Action = 'punch(active)'
 
     def sweep(self, p2, player):
         if player == 'P1':
@@ -31,20 +26,15 @@ class gameState:
 
     def sweep_1(self, p2, player):
         if self.P_Distance < 3 or (self.P_Distance == 3 and p2 == 'f'):
-            if player == 'P1':
-                self.P1_Action = 'sweep(active)'
-            else:
-                self.P2_Action = 'sweep(active)'
-            if p2 != 'cb' or not (self.P_Distance == 2 and p2 == 'b'):
+            if p2 != 'cb' and p2 != 'pl' and not (self.P_Distance == 2 and p2 == 'b'):
                 if player == 'P1':
                     self.P2_Health -= 1
                 else:
                     self.P1_Health -= 1
+        if player == 'P1':
+            self.P1_Action = 'sweep(active)'
         else:
-            if player == 'P1':
-                self.P1_Action = 'sweep(active)'
-            else:
-                self.P2_Action = 'sweep(active)'
+            self.P2_Action = 'sweep(active)'
     
     def kick(self, p2, player):
         if player == 'P1':
@@ -60,12 +50,7 @@ class gameState:
 
     def kick_2(self, p2, player):
         if self.P_Distance < 4 or (self.P_Distance == 4 and p2 == 'f'):
-            if p2 == 'sb' or (self.P_Distance == 3 and p2 == 'b'):
-                if player == 'P1':
-                    self.P1_Action = 'kick(active)'
-                else:
-                    self.P2_Action = 'kick(active)'
-            else:
+            if p2 != 'sb' and p2 != 'pm' and not(self.P_Distance == 3 and p2 == 'b'):
                 if player == 'P1':
                     self.P2_Health -= 1
                 else:
@@ -88,25 +73,65 @@ class gameState:
         else:
             self.P2_Action = 'crouch block'
 
+    def parry_high(self, p2, player):
+        if p2 == 'p' and P_Distance < 2:
+            if player == 'P1':
+                self.P2_Health -= 1
+            else:
+                self.P1_Health -= 1
+        if player == 'P1':
+            self.P1_Action = 'parry high'
+        else:
+            self.P2_Action = 'parry high'
+        
+    def parry_mid(self, p2, player):
+        if p2 == 'k2':
+            if player == 'P1':
+                self.P2_Health -= 1
+            else:
+                self.P1_Health -= 1
+        if player == 'P1':
+            self.P1_Action = 'parry mid'
+        else:
+            self.P2_Action = 'parry mid'
+
+    def parry_low(self, p2, player):
+        if p2 == 's1':
+            if player == 'P1':
+                self.P2_Health -= 1
+            else:
+                self.P1_Health -= 1
+        if player == 'P1':
+            self.P1_Action = 'parry low'
+        else:
+            self.P2_Action = 'parry low'
+
+    def recovery(self, p2, player):
+        if player == 'P1':
+            self.P1_Action = 'recovery'
+        else:
+            self.P2_Action = 'recovery'
+
     def forward(self, p2, player):
-        self.P_Distance -= 1
+        self.new_distance -= 1
         if player == 'P1':
             self.P1_Action = 'move forward'
         else:
             self.P2_Action = 'move forward'
 
     def backwards(self, p2, player):
-        self.P_Distance += 1
+        self.new_distance += 1
         if player == 'P1':
             self.P1_Action = 'move backwards'
         else:
             self.P2_Action = 'move backwards'
 
-    actions = {'p':punch, 's':sweep, 's1':sweep_1, 'k':kick, 'k1':kick_1, 'k2':kick_2, 'sb':sblock, 'cb':cblock, 'f':forward, 'b':backwards}
+    actions = {'p':punch, 's':sweep, 's1':sweep_1, 'k':kick, 'k1':kick_1, 'k2':kick_2, 'sb':sblock, 'cb':cblock, 'f':forward, 'b':backwards, 'ph':parry_high, 'pm':parry_mid, 'pl':parry_low, 'r':recovery}
 
     def act(self, p1, p2):
         self.actions[p1](self, p2, 'P1')
         self.actions[p2](self, p1, 'P2')
+        self.P_Distance = self.new_distance
 
 def game(state):
     while state.P1_Health > 0 and state.P2_Health > 0:
@@ -117,6 +142,8 @@ def game(state):
             p1 = 'k1'
         elif state.P1_Action == 'kick(startup_2)':
             p1 = 'k2'
+        elif state.P1_Action == 'parry high' or state.P1_Action == 'parry mid' or state.P1_Action == 'parry low':
+            p1 = 'r'
         else:
             print('input player 1 action')
             p1 = input()
@@ -126,6 +153,8 @@ def game(state):
             p2 = 'k1'
         elif state.P2_Action == 'kick(startup_2)':
             p2 = 'k2'
+        elif state.P2_Action == 'parry high' or state.P2_Action == 'parry mid' or state.P2_Action == 'parry low':
+            p2 = 'r'
         else:
             print('input player 2 action')
             p2 = input()
