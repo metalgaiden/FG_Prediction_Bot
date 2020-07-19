@@ -8,7 +8,7 @@ class gameState:
 
     def punch(self, p2, player):
         if self.P_Distance < 2 or (self.P_Distance == 2 and p2 == 'f'):
-            if p2 != 'sb' and p2 != 'cb' and p2 != 'ph' and p2 != 's' and not (self.P_Distance == 1 and p2 == 'b'):
+            if p2 != 'sb' and p2 != 'cb' and p2 != 'ph' and p2 != 's' and p2 != 's1' and not (self.P_Distance == 1 and p2 == 'b'):
                 if player == 'P1':
                     self.P2_Health -= 1
                 else:
@@ -134,6 +134,8 @@ class gameState:
         self.P_Distance = self.new_distance
 
 def game(state):
+    print('here is a list of all possible actions:')
+    print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry high, pm:parry mid, pl:parry low')
     while state.P1_Health > 0 and state.P2_Health > 0:
         print('the distance between players is', state.P_Distance)
         if state.P1_Action == 'sweep(startup)':
