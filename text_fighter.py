@@ -1,5 +1,6 @@
 import pygame
 from easy_bot import easy_bot
+from mcts_bot import mcts_bot
 
 class gameState:
     P_Distance = 3
@@ -150,6 +151,9 @@ def game(state, identity_1, identity_2):
             p1 = 'r'
         elif identity_1 == 'easy_bot':
             p1 = easy_bot.pick_action()
+        elif identity_1 == 'mcts_bot':
+            bot = mcts_bot()
+            p1 = bot.pick_action(state)
         else:
             print('input player 1 action')
             p1 = input()
@@ -163,6 +167,9 @@ def game(state, identity_1, identity_2):
             p2 = 'r'
         elif identity_2 == 'easy_bot':
             p2 = easy_bot.pick_action()
+        elif identity_2 == 'mcts_bot':
+            bot = mcts_bot()
+            p2 = bot.pick_action(state)
         else:
             print('input player 2 action')
             p2 = input()
