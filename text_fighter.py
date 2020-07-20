@@ -116,18 +116,30 @@ class gameState:
             self.P2_Action = 'recovery'
 
     def forward(self, p2, player):
-        self.new_distance -= 1
-        if player == 'P1':
-            self.P1_Action = 'move forward'
+        if self.P_Distance <= 0:
+            if player == 'P1':
+                self.P1_Action = None
+            else:
+                self.P2_Action = None
         else:
-            self.P2_Action = 'move forward'
+            self.new_distance -= 1
+            if player == 'P1':
+                self.P1_Action = 'move forward'
+            else:
+                self.P2_Action = 'move forward'
 
     def backwards(self, p2, player):
-        self.new_distance += 1
-        if player == 'P1':
-            self.P1_Action = 'move backwards'
+        if self.P_Distance >= 5:
+            if player == 'P1':
+                self.P1_Action = None
+            else:
+                self.P2_Action = None
         else:
-            self.P2_Action = 'move backwards'
+            self.new_distance += 1
+            if player == 'P1':
+                self.P1_Action = 'move backwards'
+            else:
+                self.P2_Action = 'move backwards'
 
     actions = {'p':punch, 's':sweep, 's1':sweep_1, 'k':kick, 'k1':kick_1, 'k2':kick_2, 'sb':sblock, 'cb':cblock, 'f':forward, 'b':backwards, 'ph':parry_high, 'pm':parry_mid, 'pl':parry_low, 'r':recovery}
 
