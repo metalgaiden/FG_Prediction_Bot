@@ -132,6 +132,22 @@ class gameState:
     actions = {'p':punch, 's':sweep, 's1':sweep_1, 'k':kick, 'k1':kick_1, 'k2':kick_2, 'sb':sblock, 'cb':cblock, 'f':forward, 'b':backwards, 'ph':parry_high, 'pm':parry_mid, 'pl':parry_low, 'r':recovery}
 
     def act(self, p1, p2):
+        if self.P1_Action == 'sweep(startup)':
+            p1 = 's1'
+        elif self.P1_Action == 'kick(startup_1)':
+            p1 = 'k1'
+        elif self.P1_Action == 'kick(startup_2)':
+            p1 = 'k2'
+        elif self.P1_Action == 'parry high' or self.P1_Action == 'parry mid' or self.P1_Action == 'parry low':
+            p1 = 'r'
+        if self.P2_Action == 'sweep(startup)':
+            p2 = 's1'
+        elif self.P2_Action == 'kick(startup_1)':
+            p2 = 'k1'
+        elif self.P2_Action == 'kick(startup_2)':
+            p2 = 'k2'
+        elif self.P2_Action == 'parry high' or self.P2_Action == 'parry mid' or self.P2_Action == 'parry low':
+            p2 = 'r'
         self.actions[p1](self, p2, 'P1')
         self.actions[p2](self, p1, 'P2')
         self.P_Distance = self.new_distance
@@ -141,7 +157,10 @@ def game(state, identity_1, identity_2):
     print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry high, pm:parry mid, pl:parry low')
     while state.P1_Health > 0 and state.P2_Health > 0:
         print('the distance between players is', state.P_Distance)
-        if state.P1_Action == 'sweep(startup)':
+        if identity_1 == 'mcts_bot':
+            bot = mcts_bot()
+            p1 = bot.pick_action(state)
+        elif state.P1_Action == 'sweep(startup)':
             p1 = 's1'
         elif state.P1_Action == 'kick(startup_1)':
             p1 = 'k1'
@@ -151,13 +170,13 @@ def game(state, identity_1, identity_2):
             p1 = 'r'
         elif identity_1 == 'easy_bot':
             p1 = easy_bot.pick_action()
-        elif identity_1 == 'mcts_bot':
-            bot = mcts_bot()
-            p1 = bot.pick_action(state)
         else:
             print('input player 1 action')
             p1 = input()
-        if state.P2_Action == 'sweep(startup)':
+        if identity_2 == 'mcts_bot':
+            bot = mcts_bot()
+            p2 = bot.pick_action(state)
+        elif state.P2_Action == 'sweep(startup)':
             p2 = 's1'
         elif state.P2_Action == 'kick(startup_1)':
             p2 = 'k1'
@@ -167,9 +186,6 @@ def game(state, identity_1, identity_2):
             p2 = 'r'
         elif identity_2 == 'easy_bot':
             p2 = easy_bot.pick_action()
-        elif identity_2 == 'mcts_bot':
-            bot = mcts_bot()
-            p2 = bot.pick_action(state)
         else:
             print('input player 2 action')
             p2 = input()
