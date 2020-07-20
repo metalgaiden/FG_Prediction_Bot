@@ -1,4 +1,6 @@
 import pygame
+from easy_bot import easy_bot
+
 class gameState:
     P_Distance = 3
     P1_Action = None
@@ -133,7 +135,7 @@ class gameState:
         self.actions[p2](self, p1, 'P2')
         self.P_Distance = self.new_distance
 
-def game(state):
+def game(state, identity_1, identity_2):
     print('here is a list of all possible actions:')
     print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry high, pm:parry mid, pl:parry low')
     while state.P1_Health > 0 and state.P2_Health > 0:
@@ -146,6 +148,8 @@ def game(state):
             p1 = 'k2'
         elif state.P1_Action == 'parry high' or state.P1_Action == 'parry mid' or state.P1_Action == 'parry low':
             p1 = 'r'
+        elif identity_1 == 'easy_bot':
+            p1 = easy_bot.pick_action()
         else:
             print('input player 1 action')
             p1 = input()
@@ -157,6 +161,8 @@ def game(state):
             p2 = 'k2'
         elif state.P2_Action == 'parry high' or state.P2_Action == 'parry mid' or state.P2_Action == 'parry low':
             p2 = 'r'
+        elif identity_2 == 'easy_bot':
+            p2 = easy_bot.pick_action()
         else:
             print('input player 2 action')
             p2 = input()
@@ -185,5 +191,9 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock()
     crashed = False
+    print('Who is player 1?')
+    identity_1 = input()
+    print('Who is player 2?')
+    identity_2 = input()
     x = gameState()
-    game(x)
+    game(x, identity_1, identity_2)
