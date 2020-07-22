@@ -167,10 +167,11 @@ class gameState:
 def game(state, identity_1, identity_2):
     print('here is a list of all possible actions:')
     print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry high, pm:parry mid, pl:parry low')
+    if identity_1 == 'mcts_bot':
+        bot = mcts_bot()
     while state.P1_Health > 0 and state.P2_Health > 0:
         print('the distance between players is', state.P_Distance)
         if identity_1 == 'mcts_bot':
-            bot = mcts_bot()
             p1 = bot.pick_action(state)
         elif state.P1_Action == 'sweep(startup)':
             p1 = 's1'
