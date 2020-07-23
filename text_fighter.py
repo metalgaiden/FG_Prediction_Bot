@@ -168,11 +168,13 @@ def game(state, identity_1, identity_2):
     print('here is a list of all possible actions:')
     print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry high, pm:parry mid, pl:parry low')
     if identity_1 == 'mcts_bot':
-        bot = mcts_bot()
+        bot1 = mcts_bot()
+    if identity_2 == 'mcts_bot':
+        bot2 = mcts_bot()
     while state.P1_Health > 0 and state.P2_Health > 0:
         print('the distance between players is', state.P_Distance)
         if identity_1 == 'mcts_bot':
-            p1 = bot.pick_action(state)
+            p1 = bot1.pick_action(state)
         elif state.P1_Action == 'sweep(startup)':
             p1 = 's1'
         elif state.P1_Action == 'kick(startup_1)':
@@ -187,8 +189,7 @@ def game(state, identity_1, identity_2):
             print('input player 1 action')
             p1 = input()
         if identity_2 == 'mcts_bot':
-            bot = mcts_bot()
-            p2 = bot.pick_action(state)
+            p2 = bot2.pick_action(state)
         elif state.P2_Action == 'sweep(startup)':
             p2 = 's1'
         elif state.P2_Action == 'kick(startup_1)':
@@ -227,9 +228,11 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock()
     crashed = False
-    print('Who is player 1?')
-    identity_1 = input()
-    print('Who is player 2?')
-    identity_2 = input()
+    # print('Who is player 1?')
+    # identity_1 = input()
+    identity_1 = 'mcts_bot'
+    # print('Who is player 2?')
+    # identity_2 = input()
+    identity_2 = 'easy_bot'
     x = gameState()
     game(x, identity_1, identity_2)
