@@ -1,21 +1,17 @@
 import random
 
-class punch_bot:
-    def pick_action():
-        possible_actions = ['p', 's', 'k', 'sb', 'cb', 'f', 'b']
-        if random.random() < 0.3:
-            choice = 'p'
-        elif random.random() < 0.4:
-            choice = 's'
-        elif random.random() < 0.5:
-            choice = 'k'
-        elif random.random() < 0.6:
-            choice = 'sb'
-        elif random.random() < 0.7:
-            choice = 'cb'
-        elif random.random() < 0.8:
-            choice = 'f'
-        else:
-            choice = 'b'
+def pick_action(state):
+    possible_actions = ['p', 's', 'k', 'sb', 'cb', 'f', 'b']
+    distance = state.P_Distance
+ 
+    if distance > 1:
+        # Too far for attacks, move forward
+        # 1% p, 5% s, 5% k, 8% sb, 5% cb, 75% f, 1% b
+        choice = random.choices(possible_actions, weights=(1, 0, 5, 8, 5, 80, 1), k=7)
+
+    else:
+        #In range of Punch, Kick and Sweep, favor for Punch
+        # 75% p, 7% s, 1% k, 5% sb, 5% cb, 1% f, 1% b
+        choice = random.choices(possible_actions, weights=(80, 7, 1, 5, 5, 1, 1), k=7)
         
-        return choice
+    return choice[0] #Returns an array but we just just need the first element as main choice
