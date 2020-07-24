@@ -8,6 +8,8 @@ class mcts_bot:
     prev_state = None
 
     def pick_action(self, state, player):
+        maxdepth = 10
+        rollouts = 3
         with open('mcts_tree.json') as f:
             mcts_tree = json.load(f)
         mcts_string = self.get_string(state)
@@ -18,7 +20,10 @@ class mcts_bot:
             prev_move = self.get_string(self.prev_state)
             print(prev_move)
             print(mcts_string)
-            mcts_tree[prev_move]['children'][mcts_string] += 1
+            try:
+                mcts_tree[prev_move]['children'][mcts_string] += 1
+            except:
+                pass
         self.prev_state = copy.deepcopy(state)
 
         while len(self.move_queue) <= 2:
@@ -62,33 +67,49 @@ class mcts_bot:
             else:
                 best_node = node
             best_score = 0
-            if check_risk_nodes != []:
+            if check_risk_nodes :
                 if player == 'p1':
-                    risk = sum(mcts_tree[mcts_parent]['p1_damage'].values()) #replace with rollout function
+                    risk = self.rollout(maxdepth, rollouts,1,curr_state) #replace with rollout function
                     for node in check_risk_nodes:
-                        score = 1*(sum(mcts_tree[node]['p2_damage'].values()) * prob / (risk))
+                        try:
+                            score = 1*( prob / (risk))
+                        except:
+                            score = 2
                         if score > best_score:
                             best_node = node
                             best_score = score
                 else:
-                    risk = sum(mcts_tree[mcts_parent]['p2_damage'].values())
+                    risk = self.rollout(maxdepth, rollouts,2,curr_state)
                     for node in check_risk_nodes:
-                        score = 1*(sum(mcts_tree[node]['p1_damage'].values()) * prob / (risk))
+                        try:
+                            score = 1*( prob / (risk))
+                        except:
+                            score = 2
                         if score > best_score:
                             best_node = node
                             best_score = score
+
             if rollout_nodes != []:
                 if player == 'p1':
-                    risk = sum(mcts_tree[node]['p1_damage'].values())
-                    for node in check_risk_nodes:
-                        score = 1*((sum(mcts_tree[node]['p2_damage'].values())/len(mcts_tree[node]['p2_damage'])) * prob / (risk))
+                   
+                    for node in rollout_nodes:
+                        risk = self.rollout(maxdepth, rollouts,1,self.get_state(node,curr_state))
+                        reward = self.rollout(maxdepth, rollouts,2,self.get_state(node,curr_state))
+                        try:
+                            score = 1*(reward * prob / (risk))
+                        except:
+                            score = 2
                         if score > best_score:
                             best_node = node
                             best_score = score
                 else:
-                    risk = sum(mcts_tree[node]['p2_damage'].values())
-                    for node in check_risk_nodes:
-                        score = 1*((sum(mcts_tree[node]['p1_damage'].values())/len(mcts_tree[node]['p1_damage'])) * prob / (risk))
+                    for node in rollout_nodes:
+                        risk = self.rollout(maxdepth, rollouts,2,self.get_state(node,curr_state))
+                        reward = self.rollout(maxdepth, rollouts,1,self.get_state(node,curr_state))
+                        try:
+                            score = 1*(reward * prob / (risk))
+                        except:
+                            score = 2
                         if score > best_score:
                             best_node = node
                             best_score = score

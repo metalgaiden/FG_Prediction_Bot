@@ -222,19 +222,6 @@ def game(state, identity_1, identity_2):
     
 
 if __name__ == "__main__":
-    pygame.init()
-    #pygame setup
-    display_width = 800
-    display_height = 600
-
-    gameDisplay = pygame.display.set_mode((display_width,display_height))
-    pygame.display.set_caption('text fighter')
-    #pygame setup
-    black = (0,0,0)
-    white = (255,255,255)
-
-    clock = pygame.time.Clock()
-    crashed = False
     # print('Who is player 1?')
     # identity_1 = input()
     identity_1 = 'mcts_bot'
