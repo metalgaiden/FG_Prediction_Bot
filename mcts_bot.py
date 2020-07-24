@@ -65,7 +65,7 @@ class mcts_bot:
             else:
                 best_node = node
             best_score = -100
-            if check_risk_nodes :
+            if check_risk_nodes != []:
                 if player == 'p1':
                     risk = self.rollout(maxdepth, rollouts, 1, False, curr_state)
                     for node in check_risk_nodes:
@@ -137,14 +137,12 @@ class mcts_bot:
         return new_state
 
     def move_to_action(self, node, player):
-        name_to_action = {'punch(active)':'p', 'sweep(startup)':'s', 'sweep(active)':'s1', 'kick(startup_1)':'k', 'kick(startup_2)':'k1', 'kick(active)':'k2', 'standing_block':'sb', 'crouch_block':'cb', 'move_forward':'f', 'move_backwards':'b', 'parry_high':'ph', 'parry_mid':'pm', 'parry_low':'pl', 'recovery':'r'}
+        name_to_action = {'punch(active)':'p', 'sweep(startup)':'s', 'sweep(active)':'s1', 'kick(startup_1)':'k', 'kick(startup_2)':'k1', 'kick(active)':'k2', 'standing_block':'sb', 'crouch_block':'cb', 'move_forward':'f', 'move_backwards':'b', 'parry_high':'ph', 'parry_mid':'pm', 'parry_low':'pl', 'recovery':'r', None:None}
         word_list = node.split()
         if player == 'p1':
             action = word_list[1]
         else:
             action = word_list[2]
-        if action == None:
-            return None
         return name_to_action[action]
 
     def add_to_tree(self, mcts_tree, mcts_string, state):

@@ -1,5 +1,4 @@
 import pygame
-from easy_bot import easy_bot
 from mcts_bot import mcts_bot
 import importlib
 
@@ -193,7 +192,7 @@ def game(state, identity_1, identity_2):
             p1 = 'r'
         else:
             try:
-                bot = importlib.import_module(identity_1)
+                bot = importlib.__import__(identity_1)
                 p1 = bot.pick_action()
             except:
                 print('input player 1 action')
@@ -209,10 +208,10 @@ def game(state, identity_1, identity_2):
         elif state.P2_Action == 'parry_high' or state.P2_Action == 'parry_mid' or state.P2_Action == 'parry_low':
             p2 = 'r'
         else:
-            if True:
-                bot = importlib.import_module(identity_2)
-                p2 = easy_bot.pick_action()
-            else:
+            try:
+                bot = importlib.__import__(identity_2)
+                p2 = bot.pick_action()
+            except:
                 print('input player 2 action')
                 p2 = input()
         state.act(p1, p2)
