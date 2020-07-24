@@ -136,7 +136,7 @@ class gameState:
                 self.P2_Action = 'move_forward'
 
     def backwards(self, p2, player):
-        if self.P_Distance >= 5:
+        if self.P_Distance >= 4:
             if player == 'P1':
                 self.P1_Action = None
             else:
@@ -181,7 +181,7 @@ def game(state, identity_1, identity_2):
     while state.P1_Health > 0 and state.P2_Health > 0:
         print('the distance between players is', state.P_Distance)
         if identity_1 == 'mcts_bot':
-            p1 = bot1.pick_action(state, 'p1')
+            p1 = bot1.pick_action(state, 'p1', identity_2)
         elif state.P1_Action == 'sweep(startup)':
             p1 = 's1'
         elif state.P1_Action == 'kick(startup_1)':
@@ -198,7 +198,7 @@ def game(state, identity_1, identity_2):
                 print('input player 1 action')
                 p1 = input()
         if identity_2 == 'mcts_bot':
-            p2 = bot2.pick_action(state, 'p2')
+            p2 = bot2.pick_action(state, 'p2', identity_1)
         elif state.P2_Action == 'sweep(startup)':
             p2 = 's1'
         elif state.P2_Action == 'kick(startup_1)':

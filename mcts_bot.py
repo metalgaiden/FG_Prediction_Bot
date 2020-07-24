@@ -7,11 +7,15 @@ class mcts_bot:
     move_queue = deque([])
     prev_state = None
 
-    def pick_action(self, state, player):
+    def pick_action(self, state, player, opponent):
         maxdepth = 20
         rollouts = 20
-        with open('mcts_tree.json') as f:
-            mcts_tree = json.load(f)
+        try:
+            with open(opponent + '.json') as f:
+                mcts_tree = json.load(f)
+        except:
+            with open('mcts_tree.json') as f:
+                mcts_tree = json.load(f)
         mcts_string = self.get_string(state)
 
         self.add_to_tree(mcts_tree, mcts_string, state)
@@ -118,8 +122,12 @@ class mcts_bot:
 
         print(self.move_queue)
         choice = self.move_queue.popleft()
-        with open('mcts_tree.json', 'w') as f:
-            json.dump(mcts_tree, f, indent=2)
+        try:
+            with open(opponent + '.json', 'w') as f:
+                json.dump(mcts_tree, f, indent=2)
+        except:
+            with open('mcts_tree.json', 'w') as f:
+                json.dump(mcts_tree, f, indent=2)
         return choice
 
     def get_string(self, statein):
@@ -137,7 +145,7 @@ class mcts_bot:
         return new_state
 
     def move_to_action(self, node, player):
-        name_to_action = {'punch(active)':'p', 'sweep(startup)':'s', 'sweep(active)':'s1', 'kick(startup_1)':'k', 'kick(startup_2)':'k1', 'kick(active)':'k2', 'standing_block':'sb', 'crouch_block':'cb', 'move_forward':'f', 'move_backwards':'b', 'parry_high':'ph', 'parry_mid':'pm', 'parry_low':'pl', 'recovery':'r', None:None}
+        name_to_action = {'punch(active)':'p', 'sweep(startup)':'s', 'sweep(active)':'s1', 'kick(startup_1)':'k', 'kick(startup_2)':'k1', 'kick(active)':'k2', 'standing_block':'sb', 'crouch_block':'cb', 'move_forward':'f', 'move_backwards':'b', 'parry_high':'ph', 'parry_mid':'pm', 'parry_low':'pl', 'recovery':'r', 'None':'sb'}
         word_list = node.split()
         if player == 'p1':
             action = word_list[1]
