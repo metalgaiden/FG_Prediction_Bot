@@ -10,6 +10,13 @@ class gameState:
     P2_Health = 1
     new_distance = P_Distance
 
+    def initialize(self, dist, p1, p2, h1, h2):
+        self.P_Distance = dist
+        self.P1_Action = p1
+        self.P2_Action = p2
+        self.P1_Health = h1
+        self.P2_Health = h2
+
     def punch(self, p2, player):
         if self.P_Distance < 2 or (self.P_Distance == 2 and p2 == 'f'):
             if p2 != 'sb' and p2 != 'cb' and p2 != 'ph' and p2 != 's' and p2 != 's1' and not (self.P_Distance == 1 and p2 == 'b'):

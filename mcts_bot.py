@@ -21,19 +21,15 @@ class mcts_bot:
             mcts_tree[prev_move]['children'][mcts_string] += 1
         self.prev_state = copy.deepcopy(state)
 
-        while len(self.move_queue) <= 1:
+        while len(self.move_queue) <= 2:
             mcts_parent = None
             mcts_node = mcts_string
-            this_state = copy.deepcopy(state)
+            curr_state = copy.deepcopy(state)
             for i in range(len(self.move_queue)):
                 mcts_parent = mcts_node
-                possible_nodes = []
-                for child in mcts_tree[mcts_node]['children']:
-                    if self.move_to_action(child, player) == self.move_queue[-i-1]:
-                        possible_nodes.append(child)
-                mcts_node = max(possible_nodes)
-                this_state.act(self.move_to_action(mcts_node, 'p1'), self.move_to_action(mcts_node, 'p2'))
-                self.add_to_tree(mcts_tree, mcts_node, state)
+                mcts_node = max(mcts_tree[mcts_node]['children'], key=mcts_tree[mcts_node]['children'].get)
+                curr_state = self.get_state(mcts_node, state)
+                self.add_to_tree(mcts_tree, mcts_node, curr_state)
             if mcts_parent != None:
                 if mcts_tree[mcts_parent]['children'][mcts_node] == 0:
                     prob = 0
@@ -45,8 +41,7 @@ class mcts_bot:
             dead_nodes = []
             rollout_nodes = []
             for node in mcts_tree[mcts_node]['children'].keys():
-                curr_state = copy.deepcopy(this_state)
-                curr_state.act(self.move_to_action(node, 'p1'), self.move_to_action(node, 'p2'))
+                curr_state = self.get_state(node, state)
                 self.add_to_tree(mcts_tree, node, curr_state)
                 if player == 'p1':
                     if mcts_tree[mcts_node]['p1_damage'][node] > 0:
@@ -115,6 +110,12 @@ class mcts_bot:
         new_string += ' '
         new_string += str(statein.P2_Action)
         return new_string
+
+    def get_state(self, stringin, state):
+        word_list = stringin.split()
+        new_state = copy.deepcopy(state)
+        new_state.initialize(int(word_list[0]), word_list[1], word_list[2], 1, 1)
+        return new_state
 
     def move_to_action(self, node, player):
         name_to_action = {'punch(active)':'p', 'sweep(startup)':'s', 'sweep(active)':'s1', 'kick(startup_1)':'k', 'kick(startup_2)':'k1', 'kick(active)':'k2', 'standing_block':'sb', 'crouch_block':'cb', 'move_forward':'f', 'move_backwards':'b', 'parry_high':'ph', 'parry_mid':'pm', 'parry_low':'pl', 'recovery':'r'}
