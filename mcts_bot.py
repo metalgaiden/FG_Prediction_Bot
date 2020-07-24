@@ -138,3 +138,28 @@ class mcts_bot:
                     mcts_tree[mcts_string]['p1_damage'][new_mcts_string] = new_state.P1_Health - state.P1_Health
                     mcts_tree[mcts_string]['p2_damage'][new_mcts_string] = new_state.P2_Health - state.P2_Health
                     mcts_tree[mcts_string]['children'][new_mcts_string] = 0
+
+    def rollout(self, maxdepth, rollouts,player,state):
+        possible_actions = ['p', 's', 'k', 'sb', 'cb', 'f', 'b', 'ph', 'pm', 'pl']
+        percent = 0
+        overall = rollouts
+        while rollouts>0:
+            new_state=copy.deepcopy(state)
+            count = 0
+            if player == 1:
+                playerhealth = new_state.P1_Health
+            else:
+                playerhealth = new_state.P2_Health
+            while count<maxdepth:
+                new_state.act(random.choice(possible_actions),random.choice(possible_actions))
+                if player == 1:
+                    if new_state.P1_Health<playerhealth:
+                        break
+                else:
+                    if new_state.P2_Health<playerhealth:
+                        break
+            if count>0:
+                percent = percent +1
+
+            rollouts = rollouts-1
+        return float(percent/overall)
