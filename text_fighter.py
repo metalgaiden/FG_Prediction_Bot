@@ -193,7 +193,7 @@ def game(state, identity_1, identity_2):
         else:
             try:
                 bot = importlib.__import__(identity_1)
-                p1 = bot.pick_action()
+                p1 = bot.pick_action(state)
             except:
                 print('input player 1 action')
                 p1 = input()
@@ -210,7 +210,7 @@ def game(state, identity_1, identity_2):
         else:
             try:
                 bot = importlib.__import__(identity_2)
-                p2 = bot.pick_action()
+                p2 = bot.pick_action(state)
             except:
                 print('input player 2 action')
                 p2 = input()
