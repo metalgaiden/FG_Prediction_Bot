@@ -66,15 +66,15 @@ class gameState:
 
     def sblock(self, p2, player):
         if player == 'P1':
-            self.P1_Action = 'standing block'
+            self.P1_Action = 'standing_block'
         else:
-            self.P2_Action = 'standing block'
+            self.P2_Action = 'standing_block'
 
     def cblock(self, p2, player):
         if player == 'P1':
-            self.P1_Action = 'crouch block'
+            self.P1_Action = 'crouch_block'
         else:
-            self.P2_Action = 'crouch block'
+            self.P2_Action = 'crouch_block'
 
     def parry_high(self, p2, player):
         if p2 == 'p' and self.P_Distance < 2:
@@ -83,9 +83,9 @@ class gameState:
             else:
                 self.P1_Health -= 1
         if player == 'P1':
-            self.P1_Action = 'parry high'
+            self.P1_Action = 'parry_high'
         else:
-            self.P2_Action = 'parry high'
+            self.P2_Action = 'parry_high'
         
     def parry_mid(self, p2, player):
         if p2 == 'k2' and self.P_Distance < 4:
@@ -94,9 +94,9 @@ class gameState:
             else:
                 self.P1_Health -= 1
         if player == 'P1':
-            self.P1_Action = 'parry mid'
+            self.P1_Action = 'parry_mid'
         else:
-            self.P2_Action = 'parry mid'
+            self.P2_Action = 'parry_mid'
 
     def parry_low(self, p2, player):
         if p2 == 's1' and self.P_Distance < 3:
@@ -105,9 +105,9 @@ class gameState:
             else:
                 self.P1_Health -= 1
         if player == 'P1':
-            self.P1_Action = 'parry low'
+            self.P1_Action = 'parry_low'
         else:
-            self.P2_Action = 'parry low'
+            self.P2_Action = 'parry_low'
 
     def recovery(self, p2, player):
         if player == 'P1':
@@ -124,9 +124,9 @@ class gameState:
         else:
             self.new_distance -= 1
             if player == 'P1':
-                self.P1_Action = 'move forward'
+                self.P1_Action = 'move_forward'
             else:
-                self.P2_Action = 'move forward'
+                self.P2_Action = 'move_forward'
 
     def backwards(self, p2, player):
         if self.P_Distance >= 5:
@@ -137,9 +137,9 @@ class gameState:
         else:
             self.new_distance += 1
             if player == 'P1':
-                self.P1_Action = 'move backwards'
+                self.P1_Action = 'move_backwards'
             else:
-                self.P2_Action = 'move backwards'
+                self.P2_Action = 'move_backwards'
 
     actions = {'p':punch, 's':sweep, 's1':sweep_1, 'k':kick, 'k1':kick_1, 'k2':kick_2, 'sb':sblock, 'cb':cblock, 'f':forward, 'b':backwards, 'ph':parry_high, 'pm':parry_mid, 'pl':parry_low, 'r':recovery}
 
@@ -150,7 +150,7 @@ class gameState:
             p1 = 'k1'
         elif self.P1_Action == 'kick(startup_2)':
             p1 = 'k2'
-        elif self.P1_Action == 'parry high' or self.P1_Action == 'parry mid' or self.P1_Action == 'parry low':
+        elif self.P1_Action == 'parry_high' or self.P1_Action == 'parry_mid' or self.P1_Action == 'parry_low':
             p1 = 'r'
         if self.P2_Action == 'sweep(startup)':
             p2 = 's1'
@@ -158,7 +158,7 @@ class gameState:
             p2 = 'k1'
         elif self.P2_Action == 'kick(startup_2)':
             p2 = 'k2'
-        elif self.P2_Action == 'parry high' or self.P2_Action == 'parry mid' or self.P2_Action == 'parry low':
+        elif self.P2_Action == 'parry_high' or self.P2_Action == 'parry_mid' or self.P2_Action == 'parry_low':
             p2 = 'r'
         self.actions[p1](self, p2, 'P1')
         self.actions[p2](self, p1, 'P2')
@@ -166,7 +166,7 @@ class gameState:
 
 def game(state, identity_1, identity_2):
     print('here is a list of all possible actions:')
-    print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry high, pm:parry mid, pl:parry low')
+    print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry_high, pm:parry_mid, pl:parry_low')
     if identity_1 == 'mcts_bot':
         bot1 = mcts_bot()
     if identity_2 == 'mcts_bot':
@@ -174,14 +174,14 @@ def game(state, identity_1, identity_2):
     while state.P1_Health > 0 and state.P2_Health > 0:
         print('the distance between players is', state.P_Distance)
         if identity_1 == 'mcts_bot':
-            p1 = bot1.pick_action(state)
+            p1 = bot1.pick_action(state, 'p1')
         elif state.P1_Action == 'sweep(startup)':
             p1 = 's1'
         elif state.P1_Action == 'kick(startup_1)':
             p1 = 'k1'
         elif state.P1_Action == 'kick(startup_2)':
             p1 = 'k2'
-        elif state.P1_Action == 'parry high' or state.P1_Action == 'parry mid' or state.P1_Action == 'parry low':
+        elif state.P1_Action == 'parry_high' or state.P1_Action == 'parry_mid' or state.P1_Action == 'parry_low':
             p1 = 'r'
         elif identity_1 == 'easy_bot':
             p1 = easy_bot.pick_action()
@@ -189,14 +189,14 @@ def game(state, identity_1, identity_2):
             print('input player 1 action')
             p1 = input()
         if identity_2 == 'mcts_bot':
-            p2 = bot2.pick_action(state)
+            p2 = bot2.pick_action(state, 'p2')
         elif state.P2_Action == 'sweep(startup)':
             p2 = 's1'
         elif state.P2_Action == 'kick(startup_1)':
             p2 = 'k1'
         elif state.P2_Action == 'kick(startup_2)':
             p2 = 'k2'
-        elif state.P2_Action == 'parry high' or state.P2_Action == 'parry mid' or state.P2_Action == 'parry low':
+        elif state.P2_Action == 'parry_high' or state.P2_Action == 'parry_mid' or state.P2_Action == 'parry_low':
             p2 = 'r'
         elif identity_2 == 'easy_bot':
             p2 = easy_bot.pick_action()
