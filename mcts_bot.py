@@ -8,8 +8,8 @@ class mcts_bot:
     prev_state = None
 
     def pick_action(self, state, player):
-        maxdepth = 10
-        rollouts = 3
+        maxdepth = 20
+        rollouts = 20
         with open('mcts_tree.json') as f:
             mcts_tree = json.load(f)
         mcts_string = self.get_string(state)
@@ -18,8 +18,6 @@ class mcts_bot:
 
         if self.prev_state != None:
             prev_move = self.get_string(self.prev_state)
-            print(prev_move)
-            print(mcts_string)
             try:
                 mcts_tree[prev_move]['children'][mcts_string] += 1
             except:
@@ -66,15 +64,15 @@ class mcts_bot:
                 best_node = random.choice(dead_nodes)
             else:
                 best_node = node
-            best_score = 0
+            best_score = -100
             if check_risk_nodes :
                 if player == 'p1':
                     risk = self.rollout(maxdepth, rollouts,1,curr_state) #replace with rollout function
                     for node in check_risk_nodes:
                         try:
-                            score = 1*( prob / (risk))
+                            score = prob + (1 - risk)
                         except:
-                            score = 2
+                            score = 0
                         if score > best_score:
                             best_node = node
                             best_score = score
@@ -82,9 +80,9 @@ class mcts_bot:
                     risk = self.rollout(maxdepth, rollouts,2,curr_state)
                     for node in check_risk_nodes:
                         try:
-                            score = 1*( prob / (risk))
+                            score = prob + (1 - risk)
                         except:
-                            score = 2
+                            score = 0
                         if score > best_score:
                             best_node = node
                             best_score = score
@@ -96,9 +94,9 @@ class mcts_bot:
                         risk = self.rollout(maxdepth, rollouts,1,self.get_state(node,curr_state))
                         reward = self.rollout(maxdepth, rollouts,2,self.get_state(node,curr_state))
                         try:
-                            score = 1*(reward * prob / (risk))
+                            score = reward + prob + (1 - risk)
                         except:
-                            score = 2
+                            score = 0
                         if score > best_score:
                             best_node = node
                             best_score = score
@@ -107,19 +105,19 @@ class mcts_bot:
                         risk = self.rollout(maxdepth, rollouts,2,self.get_state(node,curr_state))
                         reward = self.rollout(maxdepth, rollouts,1,self.get_state(node,curr_state))
                         try:
-                            score = 1*(reward * prob / (risk))
+                            score = reward + prob + (1 - risk)
                         except:
-                            score = 2
+                            score = 0
                         if score > best_score:
                             best_node = node
                             best_score = score
 
+            print(best_node, best_score)
             action = self.move_to_action(best_node, player)
             self.move_queue.append(action)
 
         print(self.move_queue)
         choice = self.move_queue.popleft()
-        print(choice)
         with open('mcts_tree.json', 'w') as f:
             json.dump(mcts_tree, f, indent=2)
         return choice
@@ -162,25 +160,30 @@ class mcts_bot:
 
     def rollout(self, maxdepth, rollouts,player,state):
         possible_actions = ['p', 's', 'k', 'sb', 'cb', 'f', 'b', 'ph', 'pm', 'pl']
-        percent = 0
+        win = 0
         overall = rollouts
-        while rollouts>0:
+        while overall > 0:
             new_state=copy.deepcopy(state)
-            count = 0
+            count = maxdepth
             if player == 1:
                 playerhealth = new_state.P1_Health
             else:
                 playerhealth = new_state.P2_Health
-            while count<maxdepth:
+            while count > 0:
                 new_state.act(random.choice(possible_actions),random.choice(possible_actions))
                 if player == 1:
                     if new_state.P1_Health<playerhealth:
+                        win += 1
+                        break
+                    elif new_state.P2_Health < playerhealth:
                         break
                 else:
                     if new_state.P2_Health<playerhealth:
+                        win += 1
                         break
-            if count>0:
-                percent = percent +1
+                    elif new_state.P1_Health < playerhealth:
+                        break
+                count -= 1
 
-            rollouts = rollouts-1
-        return float(percent/overall)
+            overall =  overall - 1
+        return float(win/rollouts)
