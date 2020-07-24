@@ -4,17 +4,20 @@ from timeit import default_timer as time
 import matplotlib.pyplot as plt
 
 time_counts = []
+health = []
 
-for i in range(0,5):
+for i in range(0,7):
     t  = time()
-    os.system('python3 text_fighter.py')
+    h = text_fighter.script_input('mcts_bot', 'kick_bot')
+    health.append(h)
     time_counts.append(time()-t)
 
 print(time_counts)
-li = [1,2,3,4,5,6]
-plt.plot(time_counts,li,lw = 1)
-plt.title('Time taken')
+li = [1,2,3,4,5,6,7]
+plt.plot(li,time_counts,lw = 1)
+plt.plot(li,health,lw = 1, color='#ff2d00')
+plt.title('Sweep to Kick')
 
-plt.xlabel('Time')
-plt.ylabel('Runs')
+plt.xlabel('Runs')
+plt.ylabel('Time/Health')
 plt.savefig("test.png")

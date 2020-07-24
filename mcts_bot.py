@@ -28,7 +28,7 @@ class mcts_bot:
                 pass
         self.prev_state = copy.deepcopy(state)
 
-        while len(self.move_queue) <= 5:
+        while len(self.move_queue) <= 3:
             mcts_parent = None
             mcts_node = mcts_string
             curr_state = copy.deepcopy(state)

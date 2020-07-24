@@ -14,5 +14,5 @@ def pick_action(state):
         # 1% p, 80% s, 2% k, 5% sb, 2% cb, 10% f, 10% b
         choice = random.choices(possible_actions, weights=(1, 80, 2, 5, 2, 5, 5), k=7)
 
-        return choice[0]
+    return choice[0]
             

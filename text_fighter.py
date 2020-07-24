@@ -6,8 +6,8 @@ class gameState:
     P_Distance = 3
     P1_Action = None
     P2_Action = None
-    P1_Health = 25
-    P2_Health = 25
+    P1_Health = 15
+    P2_Health = 15
     new_distance = P_Distance
 
     def initialize(self, dist, p1, p2, h1, h2):
@@ -125,9 +125,9 @@ class gameState:
     def forward(self, p2, player):
         if self.P_Distance <= 0:
             if player == 'P1':
-                self.P1_Action = None
+                self.P1_Action = 'recovery'
             else:
-                self.P2_Action = None
+                self.P2_Action = 'recovery'
         else:
             self.new_distance -= 1
             if player == 'P1':
@@ -138,9 +138,9 @@ class gameState:
     def backwards(self, p2, player):
         if self.P_Distance >= 4:
             if player == 'P1':
-                self.P1_Action = None
+                self.P1_Action = 'recovery'
             else:
-                self.P2_Action = None
+                self.P2_Action = 'recovery'
         else:
             self.new_distance += 1
             if player == 'P1':
@@ -223,10 +223,11 @@ def game(state, identity_1, identity_2):
         print('player 1 wins')
     elif state.P1_Health < state.P2_Health:
         print('player 2 wins')
+    return state.P1_Health
         
 def script_input(identity_1, identity_2):
     x = gameState()
-    game(x, identity_1, identity_2)
+    return game(x, identity_1, identity_2)
     
 if __name__ == "__main__":
     # print('Who is player 1?')
@@ -234,6 +235,6 @@ if __name__ == "__main__":
     identity_1 = 'mcts_bot'
     # print('Who is player 2?')
     # identity_2 = input()
-    identity_2 = 'easy_bot'
+    identity_2 = 'sweep_bot'
     x = gameState()
     game(x, identity_1, identity_2)
