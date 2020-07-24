@@ -24,7 +24,7 @@ class mcts_bot:
                 pass
         self.prev_state = copy.deepcopy(state)
 
-        while len(self.move_queue) <= 2:
+        while len(self.move_queue) <= 5:
             mcts_parent = None
             mcts_node = mcts_string
             curr_state = copy.deepcopy(state)
@@ -67,7 +67,7 @@ class mcts_bot:
             best_score = -100
             if check_risk_nodes :
                 if player == 'p1':
-                    risk = self.rollout(maxdepth, rollouts,1,curr_state) #replace with rollout function
+                    risk = self.rollout(maxdepth, rollouts, 1, False, curr_state)
                     for node in check_risk_nodes:
                         try:
                             score = prob + (1 - risk)
@@ -77,7 +77,7 @@ class mcts_bot:
                             best_node = node
                             best_score = score
                 else:
-                    risk = self.rollout(maxdepth, rollouts,2,curr_state)
+                    risk = self.rollout(maxdepth, rollouts, 2, False, curr_state)
                     for node in check_risk_nodes:
                         try:
                             score = prob + (1 - risk)
@@ -91,8 +91,8 @@ class mcts_bot:
                 if player == 'p1':
                    
                     for node in rollout_nodes:
-                        risk = self.rollout(maxdepth, rollouts,1,self.get_state(node,curr_state))
-                        reward = self.rollout(maxdepth, rollouts,2,self.get_state(node,curr_state))
+                        risk = self.rollout(maxdepth, rollouts, 1, False, self.get_state(node,curr_state))
+                        reward = self.rollout(maxdepth, rollouts, 2, True, self.get_state(node,curr_state))
                         try:
                             score = reward + prob + (1 - risk)
                         except:
@@ -102,8 +102,8 @@ class mcts_bot:
                             best_score = score
                 else:
                     for node in rollout_nodes:
-                        risk = self.rollout(maxdepth, rollouts,2,self.get_state(node,curr_state))
-                        reward = self.rollout(maxdepth, rollouts,1,self.get_state(node,curr_state))
+                        risk = self.rollout(maxdepth, rollouts, 2, False, self.get_state(node,curr_state))
+                        reward = self.rollout(maxdepth, rollouts, 1, True, self.get_state(node,curr_state))
                         try:
                             score = reward + prob + (1 - risk)
                         except:
@@ -158,7 +158,7 @@ class mcts_bot:
                     mcts_tree[mcts_string]['p2_damage'][new_mcts_string] = new_state.P2_Health - state.P2_Health
                     mcts_tree[mcts_string]['children'][new_mcts_string] = 0
 
-    def rollout(self, maxdepth, rollouts,player,state):
+    def rollout(self, maxdepth, rollouts, player, reward, state):
         possible_actions = ['p', 's', 'k', 'sb', 'cb', 'f', 'b', 'ph', 'pm', 'pl']
         win = 0
         overall = rollouts
@@ -171,18 +171,29 @@ class mcts_bot:
                 playerhealth = new_state.P2_Health
             while count > 0:
                 new_state.act(random.choice(possible_actions),random.choice(possible_actions))
-                if player == 1:
-                    if new_state.P1_Health<playerhealth:
-                        win += 1
-                        break
-                    elif new_state.P2_Health < playerhealth:
-                        break
-                else:
-                    if new_state.P2_Health<playerhealth:
-                        win += 1
-                        break
-                    elif new_state.P1_Health < playerhealth:
-                        break
+                if reward == True:
+                    if player == 1:
+                        if new_state.P2_Health < playerhealth:
+                            break
+                        elif new_state.P1_Health<playerhealth:
+                            win += 1
+                            break
+                    else:
+                        if new_state.P1_Health < playerhealth:
+                            break
+                        elif new_state.P2_Health<playerhealth:
+                            win += 1
+                            break
+                if reward == False:
+                    if player == 1:
+                        if new_state.P1_Health<playerhealth:
+                            win += 1
+                            break
+                    else:
+                        if new_state.P2_Health<playerhealth:
+                            win += 1
+                            break
+
                 count -= 1
 
             overall =  overall - 1

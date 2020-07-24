@@ -6,8 +6,8 @@ class gameState:
     P_Distance = 3
     P1_Action = None
     P2_Action = None
-    P1_Health = 1
-    P2_Health = 1
+    P1_Health = 25
+    P2_Health = 25
     new_distance = P_Distance
 
     def initialize(self, dist, p1, p2, h1, h2):
