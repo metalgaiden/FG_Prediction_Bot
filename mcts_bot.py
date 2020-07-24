@@ -34,7 +34,14 @@ class mcts_bot:
             curr_state = copy.deepcopy(state)
             for i in range(len(self.move_queue)):
                 mcts_parent = mcts_node
-                mcts_node = max(mcts_tree[mcts_node]['children'], key=mcts_tree[mcts_node]['children'].get)
+                children = {}
+                for child, amt in mcts_tree[mcts_node]['children'].items():
+                    if self.move_to_action(child, player) == self.move_queue[i]:
+                        children[child] = amt
+                if children != {}:
+                    mcts_node = max(children, key=children.get)
+                else:
+                    mcts_node = max(mcts_tree[mcts_node]['children'], key=mcts_tree[mcts_node]['children'].get)
                 curr_state = self.get_state(mcts_node, state)
                 self.add_to_tree(mcts_tree, mcts_node, curr_state)
             if mcts_parent != None:
