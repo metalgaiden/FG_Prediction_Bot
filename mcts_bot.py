@@ -143,6 +143,8 @@ class mcts_bot:
             action = word_list[1]
         else:
             action = word_list[2]
+        if action == None:
+            return None
         return name_to_action[action]
 
     def add_to_tree(self, mcts_tree, mcts_string, state):

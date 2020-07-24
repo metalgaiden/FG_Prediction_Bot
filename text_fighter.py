@@ -1,6 +1,7 @@
 import pygame
 from easy_bot import easy_bot
 from mcts_bot import mcts_bot
+import importlib
 
 class gameState:
     P_Distance = 3
@@ -190,11 +191,13 @@ def game(state, identity_1, identity_2):
             p1 = 'k2'
         elif state.P1_Action == 'parry_high' or state.P1_Action == 'parry_mid' or state.P1_Action == 'parry_low':
             p1 = 'r'
-        elif identity_1 == 'easy_bot':
-            p1 = easy_bot.pick_action()
         else:
-            print('input player 1 action')
-            p1 = input()
+            try:
+                bot = importlib.import_module(identity_1)
+                p1 = bot.pick_action()
+            except:
+                print('input player 1 action')
+                p1 = input()
         if identity_2 == 'mcts_bot':
             p2 = bot2.pick_action(state, 'p2')
         elif state.P2_Action == 'sweep(startup)':
@@ -205,11 +208,13 @@ def game(state, identity_1, identity_2):
             p2 = 'k2'
         elif state.P2_Action == 'parry_high' or state.P2_Action == 'parry_mid' or state.P2_Action == 'parry_low':
             p2 = 'r'
-        elif identity_2 == 'easy_bot':
-            p2 = easy_bot.pick_action()
         else:
-            print('input player 2 action')
-            p2 = input()
+            if True:
+                bot = importlib.import_module(identity_2)
+                p2 = easy_bot.pick_action()
+            else:
+                print('input player 2 action')
+                p2 = input()
         state.act(p1, p2)
         print('player 1 uses', state.P1_Action, 'with health', state.P1_Health)
         print('player 2 uses', state.P2_Action, 'with health', state.P2_Health)
@@ -219,8 +224,11 @@ def game(state, identity_1, identity_2):
         print('player 1 wins')
     elif state.P1_Health < state.P2_Health:
         print('player 2 wins')
+        
+def script_input(identity_1, identity_2):
+    x = gameState()
+    game(x, identity_1, identity_2)
     
-
 if __name__ == "__main__":
     # print('Who is player 1?')
     # identity_1 = input()
