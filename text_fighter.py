@@ -1,4 +1,3 @@
-import pygame
 from mcts_bot import mcts_bot
 import importlib
 
@@ -230,11 +229,11 @@ def script_input(identity_1, identity_2):
     return game(x, identity_1, identity_2)
     
 if __name__ == "__main__":
-    # print('Who is player 1?')
-    # identity_1 = input()
-    identity_1 = 'mcts_bot'
-    # print('Who is player 2?')
-    # identity_2 = input()
-    identity_2 = 'sweep_bot'
+    print('Who is player 1?')
+    identity_1 = input()
+    # identity_1 = 'mcts_bot'
+    print('Who is player 2?')
+    identity_2 = input()
+    # identity_2 = 'sweep_bot'
     x = gameState()
     game(x, identity_1, identity_2)
