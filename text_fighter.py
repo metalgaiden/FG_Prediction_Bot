@@ -45,7 +45,7 @@ class gameState:
             self.P1_Action = 'sweep(active)'
         else:
             self.P2_Action = 'sweep(active)'
-    
+
     def kick(self, p2, player):
         if player == 'P1':
             self.P1_Action = 'kick(startup_1)'
@@ -92,7 +92,7 @@ class gameState:
             self.P1_Action = 'parry_high'
         else:
             self.P2_Action = 'parry_high'
-        
+
     def parry_mid(self, p2, player):
         if p2 == 'k2' and self.P_Distance < 4:
             if player == 'P1':
@@ -170,6 +170,67 @@ class gameState:
         self.actions[p2](self, p1, 'P2')
         self.P_Distance = self.new_distance
 
+    def reverse_ascii(self, str_in):
+        temp = ''
+        for i in range(len(str_in)):
+            if (str_in[i] == '\\'):
+                temp = temp + '/'
+            elif (str_in[i] == '/'):
+                temp = temp +'\\'
+            elif (str_in[i] == '<'):
+                temp = temp + '>'
+            elif (str_in[i] == '>'):
+                temp = temp + '<'
+            else:
+                temp = temp + str_in[i]
+        temp = temp [::-1]
+        return temp
+
+    def draw(self, p1, p2):
+        # draw ascii here
+        highs = {'r':'*O ', 's':'   ', 's1':'   '}
+        mids = {'p':'<|-*', 's':'.O.', 's1':'.O.', 'k':'<|_', 'k1':'<|_', 'k2':'<|___.'}
+        lows = {'s1':'<`-.', 'k':'/ |', 'k1':'/ |', 'k2':'/ '}
+        high = ' O '
+        mid = '/|\\'
+        low = '/ \\'
+        if p1 in highs:
+            p1_high = highs[p1]
+        else:
+            p1_high = high
+        if p1 in mids:
+            p1_mid = mids[p1]
+        else:
+            p1_mid = mid
+        if p1 in lows:
+            p1_low = lows[p1]
+        else:
+            p1_low = low
+
+        if p2 in highs:
+            p2_high = self.reverse_ascii(highs[p2])
+        else:
+            p2_high = self.reverse_ascii(high)
+        if p2 in mids:
+            p2_mid = self.reverse_ascii(mids[p2])
+        else:
+            p2_mid = self.reverse_ascii(mid)
+        if p2 in lows:
+            p2_low = self.reverse_ascii(lows[p2])
+        else:
+            p2_low = self.reverse_ascii(low)
+
+        print('')
+        print('p1:' + str(self.P1_Health) + ' '*self.P_Distance + 'p2:' + str(self.P2_Health))
+        print('####', end='#'*self.P_Distance)
+        print('####')
+        print(' ' + p1_high + ' '*(self.P_Distance+6-len(p1_high)-len(p2_high)) + p2_high)
+        print(' ' + p1_mid + ' '*(self.P_Distance+6-len(p1_mid)-len(p2_mid)) + p2_mid)
+        print(' ' + p1_low + ' '*(self.P_Distance+6-len(p1_low)-len(p2_low)) + p2_low)
+        print('####', end='#'*self.P_Distance)
+        print('####')
+        print('')
+
 def game(state, identity_1, identity_2):
     print('here is a list of all possible actions:')
     print('p:punch, s:sweep, k:kick, sb:stand block, cb:crouch block, f:move forward, b: backwards, ph:parry_high, pm:parry_mid, pl:parry_low')
@@ -214,6 +275,7 @@ def game(state, identity_1, identity_2):
                 print('input player 2 action')
                 p2 = input()
         state.act(p1, p2)
+        state.draw(p1, p2)
         print('player 1 uses', state.P1_Action, 'with health', state.P1_Health)
         print('player 2 uses', state.P2_Action, 'with health', state.P2_Health)
     if state.P1_Health == state.P2_Health:
@@ -223,11 +285,11 @@ def game(state, identity_1, identity_2):
     elif state.P1_Health < state.P2_Health:
         print('player 2 wins')
     return state.P1_Health
-        
+
 def script_input(identity_1, identity_2):
     x = gameState()
     return game(x, identity_1, identity_2)
-    
+
 if __name__ == "__main__":
     print('Who is player 1?')
     identity_1 = input()
