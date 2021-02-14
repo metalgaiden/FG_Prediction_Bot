@@ -21,6 +21,8 @@ bob
 Who is player 2?
 alice
 ```
+And of course you may enter a name in conjunction with a bot to play against the ai. Do keep in mind that the mcts bot will store data about each player in a seperate <player_name>.json file, so make sure to enter the same name when playing multiple rounds to test how well it adapts to your playstyle
+
 If you would like to graph a large amount of trial runs between bots you will need the matplotlib python module installed.
 Then go into the Graph.py and edit the line that calls text fighter using the script_input method to use any two bots you would like to compare.
 ```
@@ -52,4 +54,4 @@ For the neutral nodes a rollout is performed on that node to a specified maximum
 The risk and reward factors are then passed into a function to evaluate the best option, for our program we used the formula: (prob + reward) + c * (1-risk) where c is a constant used to change the risk propensity of the bot as needed. In the diagram below because the probability is somewhat low (45%) so the program will look more at risk than it does at reward. As a result the program would likely pick option 3.
 
 # Limitations
-The current version uses a command line interface and a turn based approximation of a fighting game interation. The next obvious step would be to place the ai into a real time game with an n frames rolling buffer that contatly made predictions and calculations. The biggest issue with this transition would be the inefficiency of making calculations in a continuous space. In a discrete game like chess you can calculate or even go you can calculate games as a finite number of simulations, but in a continuous space it becomes much harder. Even with all the discrete turn based fighter I have made, the data file for each ai fighter, stored in an xml file, is far too huge to be practical. It could work but would require a lot of training and would be very slow to figure out new strategies because the it would fail to see similar screen positions like positions that are one pixel off as the same. 
+The current version uses a command line interface and a turn based approximation of a fighting game interation. The next obvious step would be to place the ai into a real time game with an n frames rolling buffer that contatly made predictions and calculations. The biggest issue with this transition would be the inefficiency of making calculations in a continuous space. In a discrete game like chess you can calculate or even go you can calculate games as a finite number of simulations, but in a continuous space it becomes much harder. Even with all the discrete turn based fighter I have made, the data file for each ai fighter, stored in a json file, is far too huge to be practical. It could work but would require a lot of training and would be very slow to figure out new strategies because the it would fail to see similar screen positions like positions that are one pixel off as the same. 
