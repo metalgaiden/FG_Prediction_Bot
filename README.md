@@ -14,6 +14,13 @@ mcts_bot
 Who is player 2?
 kick_bot
 ```
+To play the game maually just enter any other name into the prompt like so:
+```
+Who is player 1?
+bob
+Who is player 2?
+alice
+```
 If you would like to graph a large amount of trial runs between bots you will need the matplotlib python module installed.
 Then go into the Graph.py and edit the line that calls text fighter using the script_input method to use any two bots you would like to compare.
 ```
