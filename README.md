@@ -41,7 +41,9 @@ The only way to solve this is to allow the opponent to be more flexible, especia
 I look to combine the flexibility of monte carlo tree search used in programs like alphago with a rolling buffer system to simulate human reaction speeds. I have modified the monte carlo tree search quite a bit from it's origional usage by adding the concept of risk based analysis. This modification can be seen in the diagram below but to describe it succinctly I would say that it calculates the likelyhood of taking damage and dealing damage separately, and allows for a paramater to be passed to it telling it to be more or less risk tolerant.
 
 # Risk reward model
-![diagram](https://raw.githubusercontent.com/metalgaiden/FG_Prediction_Bot/master/FG_Bot_Diagram.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/metalgaiden/FG_Prediction_Bot/master/FG_Bot_Diagram.png" />
+</p>
 
 In order to accomplish this Behaviour I used mcts in combination with a unique risk reward model in order to have the ai make the correct choice in any given situation given imperfect predicted data. The data on each player’s predicted responses is stored in a json file which is generated any time a new player fights the AI.  
 
